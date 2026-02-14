@@ -1,0 +1,125 @@
+Hospital Management System (HMS) – REST API Design Document
+
+System Overview
+
+* This system is a role-based hospital management platform with four main user roles:
+Admin
+Doctor
+Receptionist
+Patient
+The application is API-driven, consumed by web/mobile clients.
+
+* User Roles & Responsibilities
+
+1. Admin
+Default admin account exists in DB (created at startup). *
+Can login & change password. *
+Can create:
+Doctor *
+Receptionist *
+Sends registration email with password. *
+Can view all users. *
+
+2. Doctor
+After login can change password:
+view profile
+View appointments
+Add prescriptions
+View patient medical history
+Mark appointment as completed
+
+3. Receptionist
+Login and change password:
+View doctors & their schedules
+Add doctor timme slots
+Confirm appointments physically or via call
+
+4. Patient
+Self registration (email + password)
+Login
+View doctors by specialization
+View doctor availability	
+Book appointment
+Make payment (before or after visit)
+View prescriptions & medical history
+
+* High Level Architecture
+Client (Web / Mobile)
+        |
+        v
+REST Controllers (Role based)
+        |
+        v
+Service Layer (Business Logic)
+        |
+        v
+Repository Layer (JPA / Hibernate)
+        |
+        v
+Database (MySQL / PostgreSQL)
+
+* Entity Relationship (ER Diagram – Textual)
+User (abstract)
+ ├── Admin
+ ├── Doctor
+ ├── Receptionist
+ └── Patient
+
+Doctor 1 --- * Appointment * --- 1 Patient
+Doctor 1 --- * Prescription
+Patient 1 --- * MedicalRecord
+Doctor 1 --- * Schedule
+Admin 1 --- * RegistrationCode
+
+* Database Entities (Core Tables)
+🔹 User (Base Entity)
+id (PK)
+email
+password
+role (ADMIN, DOCTOR, RECEPTIONIST, PATIENT)
+status (ACTIVE / INACTIVE)
+created_at
+
+🔹 Doctor
+id (PK, FK -> User)
+name
+specialization
+experience
+registration_code
+
+🔹 Receptionist
+id (PK, FK -> User)
+registration_code
+
+🔹 Patient
+id (PK, FK -> User)
+age
+gender
+phone
+
+🔹 Appointment
+id
+doctor_id
+patient_id
+appointment_date
+time_slot
+status (BOOKED / COMPLETED / CANCELLED)
+payment_status (PAID / UNPAID)
+
+🔹 Prescription
+id
+appointment_id
+doctor_id
+patient_id
+diagnosis
+medicines
+notes
+created_at
+
+🔹 RegistrationCode
+id
+code
+role (DOCTOR / RECEPTIONIST)
+is_used
+created_at
+expires_at
