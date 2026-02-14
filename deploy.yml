@@ -1,1 +1,35 @@
+---
+- name: Deploy Healthcare Application
+  hosts: worker
+  become: yes
+
+  vars:
+    image_name: "umachandrashekhar3393/healthcare-api"
+    tag: "v1.0"
+    container_name: "healthcare"
+    app_port: "8080"
+
+  tasks:
+
+    - name: Stop container if running
+      command: docker stop {{ container_name }}
+      ignore_errors: yes
+
+    - name: Remove container if exists
+      command: docker rm {{ container_name }}
+      ignore_errors: yes
+
+    - name: Remove old image if exists
+      command: docker rmi {{ image_name }}:{{ tag }}
+      ignore_errors: yes
+
+    - name: Pull latest image
+      command: docker pull {{ image_name }}:{{ tag }}
+
+    - name: Run container
+      command: >
+        docker run -d
+        -p {{ app_port }}:{{ app_port }}
+        --name {{ container_name }}
+        {{ image_name }}:{{ tag }}
 
