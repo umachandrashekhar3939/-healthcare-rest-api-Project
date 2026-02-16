@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "umachandrashekhar3939/-healthcare-api"
+        IMAGE_NAME = "umachandrashekhar3939/healthcare-api"
         TAG = "v1.0"
         DOCKER_CREDENTIALS = "dockerhub-1234"
     }
