@@ -13,7 +13,7 @@ pipeline {
             steps {
                 git branch: 'main',
                     credentialsId: 'github-3939',
-                    url: 'https://github.com/umachandrashekhar3939/-healthcare-rest-api-Project.git'
+                    url: 'https://github.com/umachandrashekhar3939/healthcare-rest-api-Project.git'
             }
         }
 
