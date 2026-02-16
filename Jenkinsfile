@@ -4,14 +4,15 @@ pipeline {
     environment {
         IMAGE_NAME = "umachandrashekhar3393/healthcare-api"
         TAG = "v1.0"
-        DOCKER_CREDENTIALS = "dockerhub-credentials"
+        DOCKER_CREDENTIALS = "dockerhub-1234"
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/umachandrashekhar3393/healthcare-rest-api-Project.git'
+                git branch: 'main',
+                    url: 'https://github.com/umachandrashekhar3393/healthcare-rest-api-Project.git'
             }
         }
 
@@ -21,21 +22,21 @@ pipeline {
             }
         }
 
-        stage('Login to DockerHub') {
+        stage('Login & Push to DockerHub') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: "dockerhub-1234",
-                    usernameVariable: 'USER',
-                    passwordVariable: 'PASS')]) {
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: DOCKER_CREDENTIALS,
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS')]) {
 
-                    sh "echo $PASS | docker login -u $USER --password-stdin"
+                        sh """
+                        echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+                        docker push ${IMAGE_NAME}:${TAG}
+                        docker logout
+                        """
+                    }
                 }
-            }
-        }
-
-        stage('Push Image') {
-            steps {
-                sh "docker push ${IMAGE_NAME}:${TAG}"
             }
         }
 
@@ -52,4 +53,5 @@ pipeline {
         }
     }
 }
+
 
