@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "umachandrashekhar3393/healthcare-api"
+        IMAGE_NAME = "umachandrashekhar3939/healthcare-api"
         TAG = "v1.0"
         DOCKER_CREDENTIALS = "dockerhub-1234"
     }
@@ -12,7 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/umachandrashekhar3393/healthcare-rest-api-Project.git'
+                    url: 'https://github.com/umachandrashekhar3939/healthcare-rest-api-Project.git'
             }
         }
 
